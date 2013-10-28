@@ -6,7 +6,15 @@
     </head>
 
     <body>
-        <strong>{{ boldmessage }}</strong>
+        <table>
+            {% for list in serverList %}
+            <tr>
+                <td>{{ list.name }}</td>
+                <td>{{ list.ip }}</td>
+                <td>{{ list.status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
     </body>
 
 </html>
