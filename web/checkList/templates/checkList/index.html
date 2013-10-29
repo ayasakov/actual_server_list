@@ -1,20 +1,31 @@
-<!DOCTYPE html>
-<html>
+    <!DOCTYPE html>
+    <html>
 
-    <head>
-        <title>Active server list</title>
-    </head>
+        <head>
+            <title>Active server list</title>
+        </head>
 
-    <body>
-        <table>
-            {% for list in serverList %}
-            <tr>
-                <td>{{ list.name }}</td>
-                <td>{{ list.ip }}</td>
-                <td>{{ list.status }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </body>
+        <body>
 
-</html>
+            {% if user.is_authenticated %}
+                <a href="logout/">Logout</a><br />
+                <table>
+                    {% for list in serverList %}
+                    <tr>
+                        <td>{{ list.name }}</td>
+                        <td>{{ list.ip }}</td>
+                        <td>{{ list.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <h1>Login, please</h1>
+            {% endif %}
+
+            <a href="about/">About</a>
+            <a href="register/">Register Here</a>
+            <a href="login/">Login</a>
+
+        </body>
+
+    </html>
