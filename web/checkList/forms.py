@@ -14,4 +14,4 @@ class UserForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('website', 'picture')
+        fields = ('login_nova', 'password_nova', 'project_id', 'auth_url')

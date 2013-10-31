@@ -12,9 +12,15 @@ from checkList import listServers
 
 def index(request):
     context = RequestContext(request)
-    ListServer = listServers.List()
 
-    context_dict = {'serverList': ListServer.buildList()}
+    user = context['user']
+    context_dict = ""
+
+    if user.is_active:
+        profile = user.get_profile()
+        ListServer = listServers.List(profile.login_nova, profile.password_nova,
+                                      profile.project_id, profile.auth_url)
+        context_dict = {'serverList': ListServer.buildList()}
 
     return render_to_response('checkList/index.html', context_dict, context)
 
@@ -48,11 +54,6 @@ def register(request):
             # This delays saving the model until we're ready to avoid integrity problems.
             profile = profile_form.save(commit=False)
             profile.user = user
-
-            # Did the user provide a profile picture?
-            # If so, we need to get it from the input form and put it in the UserProfile model.
-            if 'picture' in request.FILES:
-                profile.picture = request.FILES['picture']
 
             # Now we save the UserProfile model instance.
             profile.save()
@@ -128,4 +129,42 @@ def user_logout(request):
     return HttpResponseRedirect('/checkList/')
 
 def about(request):
-    return HttpResponse("Info about this project. Coming soon...")
+    return HttpResponse("Page about this project. Comming soon...")
+
+@login_required
+def user_edit(request):
+    # Like before, get the request's context.
+    context = RequestContext(request)
+    user_profile = request.user.get_profile()
+
+    # A boolean value for telling the template whether the registration was successful.
+    # Set to False initially. Code changes value to True when registration succeeds.
+    edited = False
+
+    # If it's a HTTP POST, we're interested in processing form data.
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        # Note that we make use of both UserForm and UserProfileForm.
+
+        profile_form = UserProfileForm(data=request.POST, instance=user_profile)
+
+        # If the two forms are valid...
+        if profile_form.is_valid():
+            #profile = profile_form.save(commit=False)
+            #profile.user = user
+
+            profile_form.save()
+
+            # Update our variable to tell the template registration was successful.
+            edited = True
+
+        else:
+            print profile_form.errors
+
+    else:
+        profile_form = UserProfileForm()
+
+    return render_to_response(
+            'checkList/edit.html',
+            {'profile_form': profile_form, 'edited': edited},
+            context)

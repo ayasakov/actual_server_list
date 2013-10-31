@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Active server list</title>
+    </head>
+
+    <body>
+        <h1>Edit</h1>
+
+        {% if edited %}
+        <strong>Thank you for edited!</strong>
+        <a href="/checkList/" >Return to the homepage.</a><br />
+        {% else %}
+        <strong>Editer here!</strong><br />
+
+        <form id="profile_form" method="post" action="/checkList/edit/"
+                enctype="multipart/form-data">
+
+            {% csrf_token %}
+            {{ profile_form.as_p }}
+
+            <!-- Provide a button to click to submit the form. -->
+            <input type="submit" name="submit" value="Editer" />
+        </form>
+        {% endif %}
+    </body>
+</html>

@@ -1,28 +1,27 @@
 from novaclient.v1_1 import client
 
-from web import settings
+class List:
 
-class List():
-
-    def __init__(self):
-        self.nova = client.Client(settings.USERNAME, settings.PASSWORD,
-                                  project_id=settings.PROJECT_ID,
-                                  auth_url=settings.AUTH_URL)
+    def __init__(self, user, password, project_id, auth_url):
+            self.nova = client.Client(user, password,
+                                      project_id=project_id,
+                                      auth_url=auth_url)
 
     def buildList(self):
         result = [{'name': 'Name Server',
                    'status': 'Status Server',
                    'ip': 'Adresses',
                    }]
-        for server in self.nova.servers.list():
+
+        try:
+            listServer = self.nova.servers.list()
+        except:
+            return result
+
+        for server in listServer:
             result.append({
                 'name': server.name,
                 'status': server.status,
                 'ip': ''.join(server.addresses['private'][0]['addr'])
             })
         return result
-
-
-
-
-
