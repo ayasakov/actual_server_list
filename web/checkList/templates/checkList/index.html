@@ -5,7 +5,13 @@
             <title>Active server list</title>
         </head>
 
-        <body>
+        <script type='text/javascript'>
+            function reload() {
+                setInterval('window.location.reload()', 5000);
+            }
+        </script>
+
+        <body onload="reload();">
 
             {% if user.is_authenticated %}
                 <a href="logout/">Logout</a><br />
@@ -30,3 +36,5 @@
         </body>
 
     </html>
+
+            <script>document.write('<script src="/myJavascript.js?dev=' + Math.floor(Math.random() * 100) + '"\><\/script>');</script>
