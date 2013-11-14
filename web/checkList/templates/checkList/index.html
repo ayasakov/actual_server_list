@@ -1,30 +1,40 @@
     <!DOCTYPE html>
-    <html>
+    <html ng-app>
 
         <head>
             <title>Active server list</title>
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.js"></script>
+            <script>
+                function ServersCtrlAjax($scope, $http){
+                    $http({method: 'GET', url: 'list/'}).success(function(data){
+                        var myData =  $.parseJSON(JSON.parse(data));
+                        $scope.servers = myData;
+                    });
+                };
+            </script>
         </head>
 
-        <script type='text/javascript'>
-            function reload() {
-                setInterval('window.location.reload()', 5000);
-            }
-        </script>
-
-        <body onload="reload();">
+        <body>
 
             {% if user.is_authenticated %}
-                <a href="logout/">Logout</a><br />
+                <a href="logout/">Logout</a>
                 <a href="edit/">Edit</a>
-                <table>
-                    {% for list in serverList %}
-                    <tr>
-                        <td>{{ list.name }}</td>
-                        <td>{{ list.ip }}</td>
-                        <td>{{ list.status }}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
+                <input type="submit" name="submit" value="Refresh" onclick="reload()" />
+
+                <div id="ng-app" ng-app ng-controller="ServersCtrlAjax">
+                    <div ng-repeat="server in servers">
+                        <h1>{{ server.name }}</h1>
+                    </div>
+                    {{ server.name }}
+                    <table>
+                        <tr ng-repeat="server in servers" >
+                            <td>{{ server.name }}</td>
+                            <td>{{ server.ip }}</td>
+                            <td>{{ server.status }}</td>
+                        </tr>
+                    </table>
+                </div>
+
             {% else %}
                 <p>Login or registration, please</p>
                 <a href="register/">Register Here</a>

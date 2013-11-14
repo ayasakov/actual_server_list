@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.utils import simplejson
+import json
 
 from checkList.forms import UserForm, UserProfileForm
 from checkList import listServers
@@ -13,14 +15,14 @@ from checkList import listServers
 def index(request):
     context = RequestContext(request)
 
-    user = context['user']
+    #user = context['user']
     context_dict = ""
 
-    if user.is_active:
-        profile = user.get_profile()
-        ListServer = listServers.List(profile.login_nova, profile.password_nova,
-                                      profile.project_id, profile.auth_url)
-        context_dict = {'serverList': ListServer.buildList()}
+    #if user.is_active:
+    #    profile = user.get_profile()
+    #    ListServer = listServers.List(profile.login_nova, profile.password_nova,
+    #                                  profile.project_id, profile.auth_url)
+    #    context_dict = {'serverList': ListServer.buildList()}
 
     return render_to_response('checkList/index.html', context_dict, context)
 
@@ -168,3 +170,18 @@ def user_edit(request):
             'checkList/edit.html',
             {'profile_form': profile_form, 'edited': edited},
             context)
+
+@login_required
+def list(request):
+    context = RequestContext(request)
+
+    user = context['user']
+    context_dict = ""
+
+    if user.is_active:
+        profile = user.get_profile()
+        ListServer = listServers.List(profile.login_nova, profile.password_nova,
+                                      profile.project_id, profile.auth_url)
+        context_dict = ListServer.buildList()
+
+    return HttpResponse(json.dumps(context_dict), content_type="application/json")

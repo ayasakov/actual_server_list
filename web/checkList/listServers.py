@@ -8,10 +8,11 @@ class List:
                                       auth_url=auth_url)
 
     def buildList(self):
-        result = [{'name': 'Name Server',
-                   'status': 'Status Server',
-                   'ip': 'Adresses',
-                   }]
+        #result = [{'name': 'Name Server',
+        #           'status': 'Status Server',
+        #           'ip': 'Adresses',
+        #           }]
+        result = []
 
         try:
             listServer = self.nova.servers.list()
