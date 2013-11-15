@@ -12,7 +12,6 @@
                 });
 
                 function ServersCtrlAjax($scope, $http) {
-                    $scope.qwert = 'aaaaaa'
                     $http.get("list").success(function(data, status){
                         $scope.servers = data;
                     }).error(function (data, status) {
