@@ -1,5 +1,6 @@
 from novaclient.v1_1 import client
 
+
 class List:
 
     def __init__(self, user, password, project_id, auth_url):
