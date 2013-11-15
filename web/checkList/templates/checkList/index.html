@@ -1,36 +1,54 @@
     <!DOCTYPE html>
-    <html ng-app>
+    <html ng-app="listApp">
 
         <head>
             <title>Active server list</title>
-            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.js"></script>
+            <script src="http://code.angularjs.org/1.2.0/angular.min.js" type="text/javascript"></script>
             <script>
-                function ServersCtrlAjax($scope, $http){
-                    $http({method: 'GET', url: 'list/'}).success(function(data){
-                        var myData =  $.parseJSON(JSON.parse(data));
-                        $scope.servers = myData;
-                    });
+                var listApp = angular.module('listApp', []);
+                    listApp.config(function($interpolateProvider) {
+                    $interpolateProvider.startSymbol('//');
+                    $interpolateProvider.endSymbol('//');
+                });
+
+                function ServersCtrlAjax($scope, $http) {
+                    $scope.qwert = 'aaaaaa'
+                    $http.get("list").success(function(data, status){
+                        $scope.servers = data;
+                    }).error(function (data, status) {
+                                $scope.response = 'Request failed';
+                            });
                 };
             </script>
+            <style>
+                .table {
+                    border: 1px solid #666;
+                    width: 100%;
+                }
+                .th {
+                    background: #f8f8f8;
+                    font-weight: bold;
+                    padding: 2px;
+                }
+            </style>
         </head>
 
         <body>
-
             {% if user.is_authenticated %}
                 <a href="logout/">Logout</a>
                 <a href="edit/">Edit</a>
-                <input type="submit" name="submit" value="Refresh" onclick="reload()" />
 
-                <div id="ng-app" ng-app ng-controller="ServersCtrlAjax">
-                    <div ng-repeat="server in servers">
-                        <h1>{{ server.name }}</h1>
-                    </div>
-                    {{ server.name }}
+                <div ng-controller="ServersCtrlAjax">
                     <table>
+                        <tr>
+                            <th>Server name</th>
+                            <th>Adresses</th>
+                            <th>Status</th>
+                        </tr>
                         <tr ng-repeat="server in servers" >
-                            <td>{{ server.name }}</td>
-                            <td>{{ server.ip }}</td>
-                            <td>{{ server.status }}</td>
+                            <td>//server.name//</td>
+                            <td>//server.ip//</td>
+                            <td>//server.status//</td>
                         </tr>
                     </table>
                 </div>
