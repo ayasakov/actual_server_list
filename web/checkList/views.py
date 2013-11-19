@@ -108,7 +108,11 @@ def user_edit(request):
             print profile_form.errors
 
     else:
-        profile_form = UserProfileForm()
+        profile_form = UserProfileForm(
+            initial={'login_nova': user_profile.login_nova,
+                     'password_nova': user_profile.password_nova,
+                     'project_id': user_profile.project_id,
+                     'auth_url': user_profile.auth_url})
 
     return render_to_response(
         'checkList/edit.html',
